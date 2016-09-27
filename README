@@ -1,0 +1,41 @@
+rdate - A small tool to show the date in an unusual format.
+
+The objective is to not confuse anymore 9th of June with the 6th of September.
+
+The date is formed by the following format, WITHOUT any other option.
+
+	YYYY = Full year
+	M = The computed char of the month
+	D/DD = Day of the month
+
+Finally:
+
+	YYYYMD
+	or
+	YYYYMDD
+
+No other options are possible. The char of the month is assigned based on the
+first non used char in the name of the month:
+
+	Month     Computed   Used
+	January   J
+	February  F          J
+	March     M          JF
+	April     A          JFM
+	May       Y          JFMA
+	June      U          JFMAY
+	July      L          JFMAYU
+	August    G          JFMAYUL
+	September S          JFMAYULG
+	October   O          JFMAYULGS
+	November  N          JFMAYULGSO
+	December  D          JFMAYULGSON
+
+So for the month i in [1,12] the c code computing the char is quite simple:
+
+	const char month[] = "JFMAYULGSOND";
+	char c = month[i-1];
+
+Also, the number of the day is 1 or 2 digits. NEVER a leading zero is used, to
+avoid confusion with the O of October.
+
