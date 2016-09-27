@@ -11,7 +11,7 @@ pkgname=rdate
 pkgver=0.1
 pkgrel=1
 pkgdesc="A small tool to show the date in an unusual format."
-arch=()
+arch=('any')
 url="https://github.com/rodarima/rdate"
 license=('Public domain')
 groups=()
@@ -25,38 +25,19 @@ options=()
 install=
 source=("$pkgname-$pkgver::git+https://github.com/rodarima/rdate")
 noextract=()
-md5sums=() #generate with 'makepkg -g'
+md5sums=('SKIP') #generate with 'makepkg -g'
 
-_gitroot=GITURL
-_gitname=MODENAME
 
 build() {
-  cd "$srcdir"
-  msg "Connecting to GIT server...."
-
-  if [[ -d "$_gitname" ]]; then
-    cd "$_gitname" && git pull origin
-    msg "The local files are updated."
-  else
-    git clone "$_gitroot" "$_gitname"
-  fi
-
-  msg "GIT checkout done or server timeout"
-  msg "Starting build..."
-
-  rm -rf "$srcdir/$_gitname-build"
-  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
-  cd "$srcdir/$_gitname-build"
-
-  #
-  # BUILD HERE
-  #
+  cd "$srcdir/$pkgname-$pkgver"
   make
 }
 
 package() {
-  cd "$srcdir/$_gitname-build"
-  make DESTDIR="$pkgdir/" install
+  cd "$srcdir/$pkgname-$pkgver"
+  mkdir -p "$pkgdir/usr/bin"
+  install rdate "$pkgdir/usr/bin/rdate"
+
 }
 
 # vim:set ts=2 sw=2 et:
